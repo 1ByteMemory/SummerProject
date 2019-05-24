@@ -15,15 +15,26 @@ public class PlayerController : Movement {
     [SerializeField]
     private KeyCode strafRight = KeyCode.D;
     [SerializeField]
-    private KeyCode jump = KeyCode.Space;
+    private KeyCode jumpKey = KeyCode.Space;
     [SerializeField]
     private KeyCode fire = KeyCode.Mouse0;
     [SerializeField]
     private KeyCode altFire = KeyCode.Mouse1;
 
+    [Header("")]
+    [Range(0.5f, 2)]
+    public float sensitivity = 1.6f;
+
     [Header("Player Properties")]
     [SerializeField]
     private float moveSpeed = 2;
+
+    [SerializeField]
+    private float jumpHieght = 1.5f;
+    [SerializeField]
+    private float longJump = 0.5f;
+
+    private float longJumpDecay = 1;
 
     [SerializeField]
     [Range(0, 1)]
@@ -36,6 +47,10 @@ public class PlayerController : Movement {
     private float maxStrafSpeed;
     private float maxBackSpeed;
 
+
+    private Camera cam;
+    private GroundCheck ground;
+
     // Use this for initialization
     protected override void Start () {
         base.Start();
@@ -43,7 +58,8 @@ public class PlayerController : Movement {
         maxStrafSpeed = moveSpeed / 1.5f;
         maxBackSpeed = moveSpeed / 2;
 
-        
+        cam = Camera.main;
+        ground = GetComponentInChildren<GroundCheck>();
 	}
 
     
@@ -51,28 +67,85 @@ public class PlayerController : Movement {
 	void Update () {
         MovePlayer();
 
-        Debug.Log(Velocity);
+        LookAround();
+
+        Jump();
+
+        //Debug.Log(Velocity);
 	}
     
     void MovePlayer()
     {
+        Vector3 localVelocity = transform.InverseTransformVector(Velocity);
+
         // Move
-        if (Velocity.z < moveSpeed)
+        if (localVelocity.z < moveSpeed)
             if (Input.GetKey(forward))
-                Move(Vector3.forward, ForceMode.Impulse);
+                Move(Vector3.forward, ForceMode.Impulse, Orientation.local);
 
 
-        if (Mathf.Abs(Velocity.z) < maxBackSpeed)
+        if (Mathf.Abs(localVelocity.z) < maxBackSpeed)
             if (Input.GetKey(backward))
-                Move(Vector3.back * backMultiplier, ForceMode.Impulse);
+                Move(Vector3.back * backMultiplier, ForceMode.Impulse, Orientation.local);
 
 
-        if (Mathf.Abs(Velocity.x) < maxStrafSpeed)
+        if (Mathf.Abs(localVelocity.x) < maxStrafSpeed)
         {
             if (Input.GetKey(strafRight))
-                Move(Vector3.right * strafMultiplier, ForceMode.Impulse);
+                Move(Vector3.right * strafMultiplier, ForceMode.Impulse, Orientation.local);
             if (Input.GetKey(strafLeft))
-                Move(Vector3.left * strafMultiplier, ForceMode.Impulse);
+                Move(Vector3.left * strafMultiplier, ForceMode.Impulse, Orientation.local);
+        }
+    }
+
+    void LookAround()
+    {
+        Vector3 lookAngle = cam.transform.localEulerAngles;
+
+        if (!Cursor.visible)
+        {
+            lookAngle.x -= Input.GetAxis("Mouse Y") * sensitivity;
+            lookAngle.y += Input.GetAxis("Mouse X") * sensitivity;
+        }
+
+        // Rotates player left and right.
+        transform.eulerAngles += new Vector3(0, lookAngle.y);
+
+        // Look up and Down limits
+
+        //Stops the player from bending over backwards.
+        if (lookAngle.x > 88 && lookAngle.x < 180)
+        {
+            cam.transform.localEulerAngles = new Vector3(88, 0);
+        }
+
+        // Stops the player from bending over forwards to far.
+        else if (lookAngle.x < 278 && lookAngle.x > 180)
+        {
+            cam.transform.localEulerAngles = new Vector3(278, 0);
+        }
+
+        // If the player is just looking straight on, then just set that as the look angle.
+        else
+        {
+            cam.transform.localEulerAngles = new Vector3(lookAngle.x, 0);
+        }
+    }
+
+    void Jump()
+    {
+        if (ground.isGrounded)
+            longJumpDecay = 1;
+
+        if (Input.GetKey(jumpKey) && ground.isGrounded)
+            Move(Vector3.up * jumpHieght, ForceMode.Impulse, Orientation.world);
+
+        // Allow the player to hold down the jump key for longer jump.
+        if (Input.GetKey(jumpKey) && !ground.isGrounded && longJumpDecay > 0)
+        {
+            Move(Vector3.up * longJump, ForceMode.Impulse, Orientation.world);
+            longJumpDecay -= 0.01f;
+            Debug.Log(longJumpDecay);
         }
     }
 }
