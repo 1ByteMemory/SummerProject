@@ -76,6 +76,7 @@ public class PlayerController : Movement {
     
     void MovePlayer()
     {
+        // Convert the velocity fro world space to local space
         Vector3 localVelocity = transform.InverseTransformVector(Velocity);
 
         // Move
@@ -145,7 +146,7 @@ public class PlayerController : Movement {
         {
             Move(Vector3.up * longJump, ForceMode.Impulse, Orientation.world);
             longJumpDecay -= 0.01f;
-            Debug.Log(longJumpDecay);
+            //Debug.Log(longJumpDecay);
         }
     }
 }

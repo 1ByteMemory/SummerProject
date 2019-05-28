@@ -392,6 +392,8 @@ GameObject:
   - component: {fileID: 1383454663}
   - component: {fileID: 1383454662}
   - component: {fileID: 1383454661}
+  - component: {fileID: 1383454665}
+  - component: {fileID: 1383454666}
   - component: {fileID: 1383454664}
   m_Layer: 0
   m_Name: Player
@@ -468,6 +470,45 @@ MonoBehaviour:
   longJump: 0.1
   strafMultiplier: 0.75
   backMultiplier: 0.5
+--- !u!114 &1383454665
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1383454660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc233d7d6c10d634bab0d55834081a73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponList: []
+--- !u!114 &1383454666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1383454660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc233d7d6c10d634bab0d55834081a73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponList:
+  - weaponType: 0
+    projectile: {fileID: 0}
+    range: 100
+    spread: 0
+    shots: 1
+  - weaponType: 0
+    projectile: {fileID: 0}
+    range: 100
+    spread: 0
+    shots: 1
+  - weaponType: 0
+    projectile: {fileID: 0}
+    range: 100
+    spread: 0
+    shots: 1
 --- !u!1 &1918336117
 GameObject:
   m_ObjectHideFlags: 0
