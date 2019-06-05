@@ -49,6 +49,7 @@ public class PlayerController : Movement {
 
 
     private Camera cam;
+    private Camera HUDCam;
     private GroundCheck ground;
 
     // Use this for initialization
@@ -59,6 +60,7 @@ public class PlayerController : Movement {
         maxBackSpeed = moveSpeed / 2;
 
         cam = Camera.main;
+        HUDCam = GameObject.FindGameObjectWithTag("hudCam").GetComponent<Camera>();
         ground = GetComponentInChildren<GroundCheck>();
 	}
 
@@ -118,18 +120,21 @@ public class PlayerController : Movement {
         if (lookAngle.x > 88 && lookAngle.x < 180)
         {
             cam.transform.localEulerAngles = new Vector3(88, 0);
+            HUDCam.transform.localEulerAngles = new Vector3(88, 0);
         }
 
         // Stops the player from bending over forwards to far.
         else if (lookAngle.x < 278 && lookAngle.x > 180)
         {
             cam.transform.localEulerAngles = new Vector3(278, 0);
+            HUDCam.transform.localEulerAngles = new Vector3(278, 0);
         }
 
         // If the player is just looking straight on, then just set that as the look angle.
         else
         {
             cam.transform.localEulerAngles = new Vector3(lookAngle.x, 0);
+            HUDCam.transform.localEulerAngles = new Vector3(lookAngle.x, 0);
         }
     }
 
