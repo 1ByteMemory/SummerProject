@@ -30,6 +30,8 @@ public class WeaponBehaviour : MonoBehaviour
 {
     public List<WeaponProperties> weaponList = new List<WeaponProperties>();
 
+    private List<GameObject> weaponObjects = new List<GameObject>();
+
     private GameObject viewModel;
 
     private int weaponIndex;
@@ -41,16 +43,17 @@ public class WeaponBehaviour : MonoBehaviour
         for (int i = 0; i < weaponList.Count; i++)
         {
             WeaponProperties weapon = weaponList[i];
-            Debug.Log(weapon.Model);
-            
-            GameObject wep = Instantiate(weapon.Model, viewModel.transform);
-            wep.transform.localScale = weapon.modelScale;
+
+            GameObject wepInst = Instantiate(weapon.Model, viewModel.transform);
+            wepInst.transform.localScale = weapon.modelScale;
+
+            weaponObjects.Add(wepInst);
 
             // Only show the first weapon.
             if (i == 0)
-                weapon.Model.SetActive(true);
+                weaponObjects[i].SetActive(true);
             else
-                weapon.Model.SetActive(false);
+                weaponObjects[i].SetActive(false);
 
             weaponIndex = 0;
         }
@@ -58,38 +61,136 @@ public class WeaponBehaviour : MonoBehaviour
 
     private void Update()
     {
-        ChangeWeapon();
-    }
+        GameObject weapon = weaponObjects[weaponIndex];
 
-
-    // Chnages the weapon
-    public void ChangeWeapon()
-    {
-        // I need to access a refernce to the instatiated child, not the model of weaponProperties
-        GameObject weapon = weaponList[weaponIndex].Model;
-
-        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
-            weapon.SetActive(false);
             weaponIndex++;
 
             if (weaponIndex > weaponList.Count - 1)
                 weaponIndex = 0;
-
-            weapon = weaponList[weaponIndex].Model;
-            weapon.SetActive(true);
-            
+            ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
         }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        else if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            weapon.SetActive(false);
             weaponIndex--;
 
             if (weaponIndex < 0)
                 weaponIndex = weaponList.Count - 1;
+            ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+        }
 
-            weapon = weaponList[weaponIndex].Model;
-            weapon.SetActive(true);
+
+        #region NumberKeys
+        int tempIndex = weaponIndex;
+
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            weaponIndex = 0;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha2))
+        {
+            weaponIndex = 1;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha3))
+        {
+            weaponIndex = 2;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha4))
+        {
+            weaponIndex = 3;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha5))
+        {
+            weaponIndex = 4;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha6))
+        {
+            weaponIndex = 5;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha7))
+        {
+            weaponIndex = 6;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha8))
+        {
+            weaponIndex = 7;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha9))
+        {
+            weaponIndex = 8;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+        else if (Input.GetKey(KeyCode.Alpha0))
+        {
+            weaponIndex = 9;
+
+            if (weaponIndex < weaponList.Count)
+            {
+                ChangeWeapon(weaponIndex, weapon, weaponObjects[weaponIndex]);
+            }
+        }
+
+        if (weaponIndex >= weaponList.Count)
+            weaponIndex = tempIndex;
+        #endregion
+
+    }
+
+
+    // Chnages the weapon
+    public void ChangeWeapon(int index, GameObject currentWeapon, GameObject nextWeapon)
+    {
+        if (index < weaponList.Count)
+        {
+            currentWeapon.SetActive(false);
+            nextWeapon.SetActive(true);
+            
+            // Play Sound Effect
         }
     }
 
